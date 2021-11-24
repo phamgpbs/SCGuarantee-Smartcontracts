@@ -107,7 +107,7 @@ interface IStableCoinReference {
     	function setRedemptionWallet(address _redemptionWallet) external;
 	
 	
-	///	@dev	updates the guarantee providing the new value of the balance and creating a new document.
+	/// @dev	updates the guarantee providing the new value of the balance and creating a new document.
 	///			This feature is restricted to the owners. It triggers two events: BalanceUpdated and DocumentUpdated
 	/// @param	_balance: unsigned integer containing the new value of the guarantee
 	/// @param	_name: bytes32 containing the name of the document (see ERC-1643)
@@ -175,7 +175,8 @@ interface IStableCoinReference {
 	/// @dev	removes the specified transaction from the contract. This is intended to be used in a smart contract
 	///			which would perform the transfer of the stable coins to the investor and the removal of that transaction
 	///			record in one ethereum transaction guarantying the atomicity and the consistency.
-	///			This feature is available on for the transaction operator
+	///			This feature is available only for the transaction operator for the deposits (amounts > 0) and for the bank 
+	///			operators (owners) for withdrawls (amounts < 0)
 	/// @param	txid: unique identifier of the core banking transaction
 	
     	function removeTransaction(uint txid) external;
