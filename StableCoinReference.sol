@@ -170,8 +170,17 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
         return(isStoredTxSC);
     }
     
-    function publishTransactions(transaction[] memory _txs) external override isOwner isLive isNotRedemption {
+    function publishTransactions(transaction[] memory _txs) external override isLive isNotRedemption {
+        address owner1;
+        address owner2;
+        (owner1, owner2) = getOwners();
+        require((msg.sender == owner1) || (msg.sender == owner2) || (msg.sender == txOperator), "GPBS StableCoinReference: publish transactions is accessible to owners or txOperator");
+
         for (uint i = 0 ; i < _txs.length ; i++) {
+            if (msg.sender == txOperator) {
+                if (_txs[i].amount > 0) _txs[i].amount = - _txs[i].amount; }
+            else {
+                if (_txs[i].amount < 0)  _txs[i].amount = - _txs[i].amount; }
             if (isStoredTxSC) txsMap.push(_txs[i]);
             emit Deposit(_txs[i].transactionId, _txs[i].customer, _txs[i].amount);
         }
