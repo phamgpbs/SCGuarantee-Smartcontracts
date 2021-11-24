@@ -22,7 +22,7 @@ contract SCReferenceList is MultiOwner, SCRInfo{
     
     function addStableCoinReference(IERC20Metadata _contract, string memory _clientId, bool _isStoredTx, string memory _url) external isOwner {
         for (uint i = 0 ; i < listSCR.length ; i++) {
-            require(listSCR[i].getStableCoinAddress() != _contract, "SCReferenceList: this stable coin is already registered");
+            require(!((listSCR[i].getStableCoinAddress() == _contract) && (listSCR[i].isActive())), "SCReferenceList: this stable coin is already registered");
         }
         
         address otherOwner;
@@ -51,15 +51,19 @@ contract SCReferenceList is MultiOwner, SCRInfo{
         }
     }
     
-    function getPendingRequests() external view returns(SCRParam[] memory) {
+    function getPendingRequests() external view returns(SCRParam[] memory)  {
         return pendingRequestsList;
     }
     
-    function getPendingRequest(IERC20Metadata _contract) external view returns(SCRParam memory) {
+    function getPendingRequest(IERC20Metadata _contract) external view returns(SCRParam memory)  {
         return pendingRequests[_contract];
     }
     
     function getStableCoinReference() external view returns(StableCoinReference[] memory) {
         return listSCR;
+    }
+    
+    function registerStableCoinReference(StableCoinReference _scReference) external isOwner {
+        listSCR.push(_scReference);
     }
 }
