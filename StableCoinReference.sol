@@ -20,7 +20,7 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
         uint256 time;
     }
     
-    string          version = "1.0",
+    string          version = "1.0";
     
     IERC20Metadata  SCAddress;
     uint            balance;
@@ -162,6 +162,10 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
         txOperator = _txOperator;
     }
     
+    function getTxOperator() external view override returns(address) {
+        return(txOperator);
+     }
+    
     function isStoredTx() external view override returns(bool) {
         return(isStoredTxSC);
     }
@@ -179,12 +183,17 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
     
     function removeTransaction(uint txid) external override isLive isNotRedemption {
         uint i;
-        
-        require(msg.sender == txOperator, "GPBS StableCoinReference: accessible only to txOperator");
+        address owner1;
+        address owner2;
+        (owner1, owner2) = getOwners();
+        require((msg.sender == owner1) || (msg.sender == owner2) || (msg.sender == txOperator), "GPBS StableCoinReference: accessible to owners or txOperator");
+
         for (i = 0 ; i < txsMap.length ; i ++) {
             if (txsMap[i].transactionId == txid) break;
         }
         require(i < txsMap.length, "GPBS StableCoinReference: cannot delete a non existing transaction");
+        if (txsMap[i].amount > 0) require(msg.sender == txOperator, "GPBS StableCoinReference: remove deposit transactions accessible only to txOperator");
+        else require(msg.sender != txOperator, "GPBS StableCoinReference: remove withdrawl transactions accessible only to bank operators");
         txsMap[i] = txsMap[txsMap.length -1];
         txsMap.pop();
     }
