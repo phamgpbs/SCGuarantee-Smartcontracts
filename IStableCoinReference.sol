@@ -41,6 +41,12 @@ interface IStableCoinReference {
 	event newRedemptionWallet(address indexed _redemptionWallet);
 
 
+	/// @dev	returns the version of the interface of this smartcontract
+	/// @return	a string containing the smartcontract version
+	
+    function getVersion() external view returns(string memory);
+    
+    
 	/// @dev	returns the stablecoin's currency which the symbol of the stable coin
 	/// @return	a string containing the stablecoin's currency
 	
