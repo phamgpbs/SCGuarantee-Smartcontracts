@@ -20,6 +20,8 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
         uint256 time;
     }
     
+    string          version = "1.0",
+    
     IERC20Metadata  SCAddress;
     uint            balance;
     uint            balanceTime;
@@ -66,6 +68,10 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
     
 
     
+    function getVersion() external view override returns(string memory) {
+        return version;
+    }
+ 
     function getCurrency() external view override returns(string memory) {
         return currency;
     }
