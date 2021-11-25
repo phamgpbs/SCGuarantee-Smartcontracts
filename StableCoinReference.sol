@@ -120,7 +120,7 @@ contract StableCoinReference is MultiOwner, IERC1643, SCRInfo, IStableCoinRefere
         }
         else {
             redemptionWallet = address(0);
-            pendingRequests[_redemptionWallet] == msg.sender;
+            pendingRequests[_redemptionWallet] = msg.sender;
         }
     }
 
